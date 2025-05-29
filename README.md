@@ -30,7 +30,7 @@
   - Multiple entry points to sections
 
 * 👨‍💻 **Interactive Sections**
-  - Hero section with animated text and social links
+  - Home section with animated text and social links
   - About section with professional introduction
   - Experience timeline with detailed cards
   - Project showcase with tech stack
@@ -50,7 +50,7 @@
   - Social media connections
   - Direct contact information
   - Location integration with Google Maps
-  - Contact form (Coming Soon)
+  - Contact form
 
 * 🔍 **Performance & Accessibility**
   - Optimized asset loading
@@ -138,7 +138,7 @@ This creates an optimized production build in the `dist` directory.
 
 ## 🔗 Links & Resources
 
-* [Portfolio Website](https://your-portfolio-url.com)
+* [Portfolio Website](https://jaya-sriram-ganeshna-portfolio.vercel.app/)
 * [GitHub Repository](https://github.com/Jai2899/jaya-sriram-ganeshna-portfolio)
 * [LinkedIn Profile](https://linkedin.com/in/jaya-sriram-g)
 * [Material-UI Documentation](https://mui.com/)
