@@ -453,8 +453,8 @@ export const Footer = () => {
                       color: "text.secondary",
                       textDecoration: "none",
                       display: "flex",
-                      alignItems: "center",
-                      gap: 2,
+                      alignItems: info.icon.type === LocationOnIcon ? "flex-start" : "center",
+                      gap: 1.5,
                       p: 1.5,
                       borderRadius: 1,
                       transition: "all 0.3s ease-in-out",
@@ -480,7 +480,6 @@ export const Footer = () => {
                         },
                         "& .text": {
                           color: "primary.main",
-                          animation: `${slideInAnimation} 0.3s ease forwards`,
                         }
                       },
                     }}
@@ -489,28 +488,27 @@ export const Footer = () => {
                     <Box
                       className="icon"
                       sx={{
-                        width: 36,
-                        height: 36,
-                        borderRadius: 1,
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        background: (theme) => alpha(theme.palette.primary.main, 0.1),
-                        color: "text.secondary",
+                        minWidth: 24,
                         transition: "all 0.3s ease",
-                        "& svg": {
-                          fontSize: 20,
-                        }
+                        mt: info.icon.type === LocationOnIcon ? 0.5 : 0,
                       }}
                     >
                       {info.icon}
                     </Box>
                     <Typography
                       className="text"
-                      variant="body2"
                       sx={{
-                        fontWeight: 500,
-                        transition: "all 0.3s ease",
+                        fontSize: { xs: "0.8rem", sm: "0.85rem" },
+                        lineHeight: 1.4,
+                        transition: "color 0.3s ease",
+                        wordBreak: info.icon.type === LocationOnIcon ? "break-word" : "keep-all",
+                        whiteSpace: info.icon.type === LocationOnIcon ? "normal" : "nowrap",
+                        overflow: info.icon.type === LocationOnIcon ? "visible" : "hidden",
+                        textOverflow: info.icon.type === LocationOnIcon ? "clip" : "ellipsis",
+                        flex: 1,
                       }}
                     >
                       {info.text}
