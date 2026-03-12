@@ -4,7 +4,8 @@ import { NotFound } from "@/pages/NotFound";
 import { SnackbarProvider } from 'notistack';
 import { Box, Container } from '@mui/material';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 /** Module-level variants — prevents inline object creation; useReducedMotion disables for a11y */
 const PAGE_TRANSITION_VARIANTS = {
   initial: { opacity: 0, y: 20 },
@@ -60,8 +61,11 @@ function App() {
           <Container maxWidth="xl" sx={{ py: 2 }}>
             <AnimatedRoutes />
           </Container>
+          <Analytics />
+          <SpeedInsights />
         </BrowserRouter>
       </SnackbarProvider>
+      
     </Box>
   );
 }
