@@ -15,9 +15,15 @@ import ParachuteIcon from '@mui/icons-material/Paragliding';
 import SportsIcon from '@mui/icons-material/Sports';
 import MovieIcon from '@mui/icons-material/Movie';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 
 const MotionCard = motion(Card);
+
+/** Module-level variants — useReducedMotion disables in component */
+const CARD_REVEAL_VARIANTS = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
+};
 
 const interests = [
   {
@@ -52,6 +58,7 @@ const interests = [
 
 export const InterestsSection = () => {
   const theme = useTheme();
+  const prefersReducedMotion = useReducedMotion();
 
   return (
     <Box
@@ -71,8 +78,9 @@ export const InterestsSection = () => {
           <Grid item xs={12} md={5}>
             <Box sx={{ position: "relative" }}>
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={prefersReducedMotion ? { opacity: 1, y: 0 } : "hidden"}
+                whileInView={prefersReducedMotion ? undefined : "visible"}
+                variants={prefersReducedMotion ? undefined : CARD_REVEAL_VARIANTS}
                 transition={{ duration: 0.8 }}
                 viewport={{ once: true }}
               >
@@ -127,8 +135,9 @@ export const InterestsSection = () => {
               {interests.map((interest, index) => (
                 <Grid item xs={12} sm={6} key={index}>
                   <MotionCard
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
+                    initial={prefersReducedMotion ? { opacity: 1, y: 0 } : "hidden"}
+                    whileInView={prefersReducedMotion ? undefined : "visible"}
+                    variants={prefersReducedMotion ? undefined : CARD_REVEAL_VARIANTS}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     viewport={{ once: true }}
                     sx={{

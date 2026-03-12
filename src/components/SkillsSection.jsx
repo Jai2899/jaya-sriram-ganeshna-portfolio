@@ -15,6 +15,7 @@ import CodeIcon from "@mui/icons-material/Code";
 import StorageIcon from "@mui/icons-material/Storage";
 import BuildIcon from "@mui/icons-material/Build";
 import AppsIcon from "@mui/icons-material/Apps";
+import { SECTION_IDS } from '@/constants';
 
 const skills = {
   frontend: {
@@ -111,7 +112,7 @@ export const SkillsSection = () => {
   return (
     <Box
       component="section"
-      id="skills"
+      id={SECTION_IDS.SKILLS}
       sx={{
         pt: { xs: 6, md: 6 },
         pb: { xs: 6, md: 8 },

@@ -8,6 +8,7 @@ import {
   Grid,
   alpha,
   useTheme,
+  useMediaQuery,
   Chip,
   IconButton,
   Divider,
@@ -20,11 +21,18 @@ import ArticleIcon from "@mui/icons-material/Article";
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import CloseIcon from '@mui/icons-material/Close';
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { keyframes } from '@emotion/react';
 import { useState } from "react";
+import { SECTION_IDS } from '@/constants';
 
 const MotionCard = motion(Card);
+
+/** Module-level variants — useReducedMotion disables in component */
+const CARD_REVEAL_VARIANTS = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
+};
 
 const ribbonAnimation = keyframes`
   0% { transform: rotate(-45deg) translateX(-5px); }
@@ -70,6 +78,7 @@ const papers = [
 
 export const ResearchSection = () => {
   const theme = useTheme();
+  const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
   const [selectedPaper, setSelectedPaper] = useState(null);
 
   const handleOpenDialog = (paper) => {
@@ -83,7 +92,7 @@ export const ResearchSection = () => {
   return (
     <Box
       component="section"
-      id="research"
+      id={SECTION_IDS.RESEARCH}
       sx={{
         pt: { xs: 6, md: 6 },
         pb: { xs: 6, md: 8 },
@@ -335,8 +344,8 @@ export const ResearchSection = () => {
                       ml: { md: 0 },
                       flexWrap: { md: 'wrap' }
                     }}>
-                      {/* Show 2 tags on tablet, up to 3 on desktop */}
-                      {paper.tags.slice(0, { sm: 2, md: 3 }[theme.breakpoints.up('md') ? 'md' : 'sm']).map((tag, idx) => (
+                      {/* Show 2 tags on tablet, up to 3 on desktop — useMediaQuery for correct boolean, not breakpoints.up string */}
+                      {paper.tags.slice(0, isDesktop ? 3 : 2).map((tag, idx) => (
                         <Chip
                           key={idx}
                           label={tag}
@@ -356,10 +365,9 @@ export const ResearchSection = () => {
                         />
                       ))}
                       {/* Show count chip only if there are more tags than shown */}
-                      {((theme.breakpoints.up('md') && paper.tags.length > 3) || 
-                        (!theme.breakpoints.up('md') && paper.tags.length > 2)) && (
+                      {((isDesktop && paper.tags.length > 3) || (!isDesktop && paper.tags.length > 2)) && (
                         <Chip
-                          label={`+${paper.tags.length - (theme.breakpoints.up('md') ? 3 : 2)}`}
+                          label={`+${paper.tags.length - (isDesktop ? 3 : 2)}`}
                           size="small"
                           sx={{
                             display: { sm: 'flex', md: 'flex' },

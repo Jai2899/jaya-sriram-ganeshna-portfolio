@@ -4,6 +4,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import WorkIcon from "@mui/icons-material/Work";
 import { alpha } from "@mui/material/styles";
 import { keyframes } from "@mui/system";
+import { SECTION_IDS } from "@/constants";
 
 const iconFloat = keyframes`
   0%, 100% {
@@ -14,15 +15,16 @@ const iconFloat = keyframes`
   }
 `;
 
+/* Uses :root --color-primary-rgb from index.css — mirrors theme.js palette */
 const iconPulse = keyframes`
   0% {
-    box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4);
+    box-shadow: 0 0 0 0 rgba(var(--color-primary-rgb), 0.4);
   }
   70% {
-    box-shadow: 0 0 0 6px rgba(37, 99, 235, 0);
+    box-shadow: 0 0 0 6px rgba(var(--color-primary-rgb), 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(37, 99, 235, 0);
+    box-shadow: 0 0 0 0 rgba(var(--color-primary-rgb), 0);
   }
 `;
 
@@ -119,7 +121,7 @@ export const AboutSection = () => {
   return (
     <Box
       component="section"
-      id="about"
+      id={SECTION_IDS.ABOUT}
       sx={{
         pt: { xs: 6, md: 6 },
         pb: { xs: 6, md: 8 },
@@ -248,10 +250,10 @@ export const AboutSection = () => {
           }}
         >
           <Button
-            href="#contact"
+            href={`#${SECTION_IDS.CONTACT}`}
             onClick={(e) => {
               e.preventDefault();
-              const element = document.getElementById("contact");
+              const element = document.getElementById(SECTION_IDS.CONTACT);
               if (element) {
                 const offset = window.innerWidth >= 960 ? 72 : 64;
                 const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;

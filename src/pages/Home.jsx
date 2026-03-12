@@ -1,4 +1,5 @@
 import { Box, Container, useTheme } from '@mui/material';
+import { SECTION_IDS } from '@/constants';
 import { Navbar } from "@/components/Navbar";
 import { StarBackground } from "@/components/StarBackground";
 import { HomeSection } from "@/components/HomeSection";
@@ -45,8 +46,9 @@ export const Home = () => {
         <StarBackground />
       </Box>
 
-      {/* Main Content - Scrollable Area */}
+      {/* Main Content - Scrollable Area; id for skip-link target */}
       <Box
+        id="main-content"
         sx={{
           flex: 1,
           position: 'relative',
@@ -102,17 +104,17 @@ export const Home = () => {
             '& + section': {
               mt: { xs: 8, md: 10 },
             },
-            // Special spacing for specific sections
-            '#jganeshna': {
+            // Special spacing for specific sections (IDs from constants)
+            [`#${SECTION_IDS.HOME}`]: {
               minHeight: '100vh',
               display: 'flex',
               alignItems: 'center',
               py: 0,
               '&::after': {
-                display: 'none', // Remove divider from hero section
+                display: 'none',
               },
             },
-            '#about': {
+            [`#${SECTION_IDS.ABOUT}`]: {
               mt: { xs: 8, md: 10 },
             },
           },

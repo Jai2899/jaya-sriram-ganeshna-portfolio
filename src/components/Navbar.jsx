@@ -22,27 +22,9 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import { NAV_SECTIONS, SECTION_IDS } from "@/constants";
 
-const navItems = [
-  { name: "Home", href: "#jganeshna" },
-  { name: "About", href: "#about" },
-  {
-    name: "Experience & Projects",
-    items: [
-      { name: "Experience", href: "#experience" },
-      { name: "Projects", href: "#projects" },
-    ],
-  },
-  { name: "Skills", href: "#skills" },
-  {
-    name: "Education & Research",
-    items: [
-      { name: "Education", href: "#education" },
-      { name: "Research", href: "#research" },
-    ],
-  },
-  { name: "Contact", href: "#contact" },
-];
+const navItems = NAV_SECTIONS;
 
 export const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -60,6 +42,16 @@ export const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // WCAG 2.1 SC 2.1.2 — Escape key closes mobile drawer for keyboard users
+  useEffect(() => {
+    if (!isMenuOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') setIsMenuOpen(false);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isMenuOpen]);
+
   const handleMenuOpen = (event, itemName) => {
     setAnchorEls((prev) => ({ ...prev, [itemName]: event.currentTarget }));
     setOpenMenus((prev) => ({ ...prev, [itemName]: true }));
@@ -76,7 +68,7 @@ export const Navbar = () => {
       const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
       
       // For contact section, scroll to the bottom
-      if (href === "#contact") {
+      if (href === `#${SECTION_IDS.CONTACT}`) {
         window.scrollTo({
           top: document.documentElement.scrollHeight,
           behavior: "smooth"
@@ -322,7 +314,7 @@ export const Navbar = () => {
           <Typography
             variant="h6"
             component="div"
-            onClick={() => scrollToSection("#jganeshna")}
+            onClick={() => scrollToSection(`#${SECTION_IDS.HOME}`)}
             sx={{
               fontWeight: 700,
               textDecoration: "none",

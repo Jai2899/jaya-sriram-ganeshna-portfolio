@@ -20,12 +20,29 @@ import {
 import WorkIcon from "@mui/icons-material/Work";
 import CloseIcon from '@mui/icons-material/Close';
 import LinkIcon from '@mui/icons-material/Link';
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useState } from "react";
 import { useSwipeToDismiss } from '@/hooks/useSwipeToDismiss';
 import { keyframes } from '@emotion/react';
+import { SECTION_IDS } from '@/constants';
 
 const MotionCard = motion(Card);
+
+/** Module-level variants — avoid inline animations; useReducedMotion overrides in component */
+const CARD_REVEAL_VARIANTS = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
+};
+
+/** Parses duration string (e.g. "June 2022 - Present") to ISO dateTime for <time> — WCAG 2.1 SC 1.3.1 */
+function parseStartDateFromDuration(duration) {
+  if (!duration || typeof duration !== 'string') return undefined;
+  const months = { jan: '01', feb: '02', mar: '03', apr: '04', may: '05', jun: '06', jul: '07', aug: '08', sep: '09', oct: '10', nov: '11', dec: '12' };
+  const match = duration.match(/([a-z]+)\s+(\d{4})/i);
+  if (!match) return undefined;
+  const month = months[match[1].toLowerCase().slice(0, 3)];
+  return month ? `${match[2]}-${month}` : undefined;
+}
 
 const pulseAnimation = keyframes`
   0% { transform: scale(1); }
@@ -162,6 +179,7 @@ export const ExperienceSection = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
+  const prefersReducedMotion = useReducedMotion();
   const [selectedExperience, setSelectedExperience] = useState(null);
 
   const handleOpenDialog = (experience) => {
@@ -186,9 +204,10 @@ export const ExperienceSection = () => {
 
     return (
       <MotionCard
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: index * 0.1 }}
+        initial={prefersReducedMotion ? { opacity: 1, y: 0 } : "hidden"}
+        whileInView={prefersReducedMotion ? undefined : "visible"}
+        variants={prefersReducedMotion ? undefined : CARD_REVEAL_VARIANTS}
+        transition={{ delay: index * 0.1 }}
         viewport={{ once: true }}
         onClick={() => handleOpenDialog(exp)}
         sx={{
@@ -343,7 +362,15 @@ export const ExperienceSection = () => {
                 {exp.company}
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                {exp.duration} • {exp.location}
+                {parseStartDateFromDuration(exp.duration) ? (
+                  <Box component="span">
+                    <Box component="time" dateTime={parseStartDateFromDuration(exp.duration)}>{exp.duration}</Box>
+                    {' • '}
+                    {exp.location}
+                  </Box>
+                ) : (
+                  `${exp.duration} • ${exp.location}`
+                )}
               </Typography>
             </Box>
           </Box>
@@ -396,9 +423,10 @@ export const ExperienceSection = () => {
   const renderMobileExperienceCard = (exp, index) => {
     return (
       <MotionCard
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: index * 0.1 }}
+        initial={prefersReducedMotion ? { opacity: 1, y: 0 } : "hidden"}
+        whileInView={prefersReducedMotion ? undefined : "visible"}
+        variants={prefersReducedMotion ? undefined : CARD_REVEAL_VARIANTS}
+        transition={{ delay: index * 0.1 }}
         viewport={{ once: true }}
         onClick={() => handleOpenDialog(exp)}
         sx={{
@@ -553,7 +581,15 @@ export const ExperienceSection = () => {
                 {exp.company}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {exp.duration} • {exp.location}
+                {parseStartDateFromDuration(exp.duration) ? (
+                  <Box component="span">
+                    <Box component="time" dateTime={parseStartDateFromDuration(exp.duration)}>{exp.duration}</Box>
+                    {' • '}
+                    {exp.location}
+                  </Box>
+                ) : (
+                  `${exp.duration} • ${exp.location}`
+                )}
               </Typography>
             </Box>
           </Box>
@@ -570,9 +606,10 @@ export const ExperienceSection = () => {
 
     return (
       <MotionCard
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: index * 0.1 }}
+        initial={prefersReducedMotion ? { opacity: 1, y: 0 } : "hidden"}
+        whileInView={prefersReducedMotion ? undefined : "visible"}
+        variants={prefersReducedMotion ? undefined : CARD_REVEAL_VARIANTS}
+        transition={{ delay: index * 0.1 }}
         viewport={{ once: true }}
         onClick={() => handleOpenDialog(exp)}
         sx={{
@@ -727,7 +764,15 @@ export const ExperienceSection = () => {
                 {exp.company}
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                {exp.duration} • {exp.location}
+                {parseStartDateFromDuration(exp.duration) ? (
+                  <Box component="span">
+                    <Box component="time" dateTime={parseStartDateFromDuration(exp.duration)}>{exp.duration}</Box>
+                    {' • '}
+                    {exp.location}
+                  </Box>
+                ) : (
+                  `${exp.duration} • ${exp.location}`
+                )}
               </Typography>
             </Box>
           </Box>
@@ -946,7 +991,7 @@ export const ExperienceSection = () => {
   return (
     <Box
       component="section"
-      id="experience"
+      id={SECTION_IDS.EXPERIENCE}
       sx={{
         pt: { xs: 6, md: 6 },
         pb: { xs: 6, md: 8 },
@@ -1096,7 +1141,15 @@ export const ExperienceSection = () => {
                     {selectedExperience.company}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    {selectedExperience.duration} • {selectedExperience.location}
+                    {parseStartDateFromDuration(selectedExperience.duration) ? (
+                      <Box component="span">
+                        <Box component="time" dateTime={parseStartDateFromDuration(selectedExperience.duration)}>{selectedExperience.duration}</Box>
+                        {' • '}
+                        {selectedExperience.location}
+                      </Box>
+                    ) : (
+                      `${selectedExperience.duration} • ${selectedExperience.location}`
+                    )}
                   </Typography>
                 </Box>
                 <IconButton

@@ -3,21 +3,30 @@ import { Home } from "@/pages/Home";
 import { NotFound } from "@/pages/NotFound";
 import { SnackbarProvider } from 'notistack';
 import { Box, Container } from '@mui/material';
-import { AnimatePresence, motion } from 'framer-motion';
-import { InterestsSection } from "@/components/InterestsSection";
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 
-// Wrap routes with animation
+/** Module-level variants — prevents inline object creation; useReducedMotion disables for a11y */
+const PAGE_TRANSITION_VARIANTS = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -20 },
+};
+
+const PAGE_TRANSITION = { duration: 0.3 };
+
 const AnimatedRoutes = () => {
   const location = useLocation();
-  
+  const prefersReducedMotion = useReducedMotion();
+
   return (
     <AnimatePresence mode="wait">
       <motion.div
         key={location.pathname}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -20 }}
-        transition={{ duration: 0.3 }}
+        initial={prefersReducedMotion ? false : "initial"}
+        animate={prefersReducedMotion ? false : "animate"}
+        exit={prefersReducedMotion ? false : "exit"}
+        variants={prefersReducedMotion ? undefined : PAGE_TRANSITION_VARIANTS}
+        transition={PAGE_TRANSITION}
       >
         <Routes location={location}>
           <Route index element={<Home />} />

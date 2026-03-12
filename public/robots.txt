@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://jaya-sriram-ganeshna-portfolio.vercel.app/sitemap.xml

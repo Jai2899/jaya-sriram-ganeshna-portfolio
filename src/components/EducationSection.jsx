@@ -21,12 +21,19 @@ import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import CloseIcon from '@mui/icons-material/Close';
 import GradeIcon from '@mui/icons-material/Grade';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useState } from "react";
 import { useSwipeToDismiss } from '@/hooks/useSwipeToDismiss';
 import { keyframes } from '@emotion/react';
+import { SECTION_IDS } from '@/constants';
 
 const MotionCard = motion(Card);
+
+/** Module-level variants — useReducedMotion disables in component */
+const CARD_REVEAL_VARIANTS = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
+};
 
 const pulseAnimation = keyframes`
   0% { transform: scale(1); }
@@ -105,6 +112,7 @@ const education = [
 
 export const EducationSection = () => {
   const theme = useTheme();
+  const prefersReducedMotion = useReducedMotion();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
   const [selectedEducation, setSelectedEducation] = useState(null);
@@ -125,8 +133,9 @@ export const EducationSection = () => {
   // Helper function to render mobile/tablet card
   const renderResponsiveCard = (edu, index) => (
               <MotionCard
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={prefersReducedMotion ? { opacity: 1, y: 0 } : "hidden"}
+                whileInView={prefersReducedMotion ? undefined : "visible"}
+                variants={prefersReducedMotion ? undefined : CARD_REVEAL_VARIANTS}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 viewport={{ once: true }}
                 onClick={() => handleOpenDialog(edu)}
@@ -164,19 +173,19 @@ export const EducationSection = () => {
             width: 120,
             height: 25,
             background: (theme) => `linear-gradient(45deg, 
-              ${alpha('#FFD700', 0.9)},
-              ${alpha('#FDB931', 0.9)}
+              ${alpha(theme.palette.warning.main, 0.95)},
+              ${alpha(theme.palette.warning.dark, 0.95)}
             )`,
             transform: 'rotate(-45deg)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             zIndex: 2,
-            boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+            boxShadow: (theme) => `0 2px 4px ${alpha(theme.palette.common.black, 0.2)}`,
             animation: `${ribbonAnimation} 3s ease-in-out infinite`,
             '&::before': {
               content: '"Gold Medal"',
-              color: '#000',
+              color: (theme) => theme.palette.common.black,
               fontSize: '0.75rem',
               fontWeight: 600,
               textTransform: 'uppercase',
@@ -394,8 +403,9 @@ export const EducationSection = () => {
   // Helper function to render desktop card
   const renderDesktopCard = (edu, index) => (
     <MotionCard
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={prefersReducedMotion ? { opacity: 1, y: 0 } : "hidden"}
+      whileInView={prefersReducedMotion ? undefined : "visible"}
+      variants={prefersReducedMotion ? undefined : CARD_REVEAL_VARIANTS}
       transition={{ duration: 0.5, delay: index * 0.1 }}
       viewport={{ once: true }}
       onClick={() => handleOpenDialog(edu)}
@@ -647,8 +657,8 @@ export const EducationSection = () => {
                         <EmojiEventsIcon 
                           sx={{ 
                             fontSize: 40, 
-                            color: '#FFD700',
-                            filter: 'drop-shadow(0 0 8px rgba(255, 215, 0, 0.6))',
+                            color: (theme) => theme.palette.warning.main,
+                            filter: (theme) => `drop-shadow(0 0 8px ${alpha(theme.palette.warning.main, 0.6)})`,
                             animation: `${pulseAnimation} 2s infinite`,
                             zIndex: 1
                           }}
@@ -663,7 +673,7 @@ export const EducationSection = () => {
   return (
     <Box
       component="section"
-      id="education"
+      id={SECTION_IDS.EDUCATION}
       sx={{
         pt: { xs: 6, md: 6 },
         pb: { xs: 6, md: 8 },

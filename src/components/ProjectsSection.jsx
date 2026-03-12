@@ -14,7 +14,7 @@ import {
   IconButton,
   useMediaQuery,
 } from "@mui/material";
-import { motion, useAnimation } from "framer-motion";
+import { motion, useAnimation, useReducedMotion } from "framer-motion";
 import SchoolIcon from '@mui/icons-material/School';
 import ScienceIcon from '@mui/icons-material/Science';
 import PsychologyIcon from '@mui/icons-material/Psychology';
@@ -24,8 +24,15 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { useState, useEffect, useRef } from "react";
 import { keyframes } from "@emotion/react";
+import { SECTION_IDS } from '@/constants';
 
 const MotionCard = motion(Card);
+
+/** Module-level variants — useReducedMotion disables in component */
+const CARD_REVEAL_VARIANTS = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
+};
 
 const projects = [
   {
@@ -46,7 +53,7 @@ const projects = [
       "Designed and implemented a skill-based matching algorithm with 85% accuracy",
       "Deployed microservices architecture on Azure using Docker and Kubernetes"
     ],
-    technologies: ["React.js", "Node.jS", "PostgreSQL", "Docker", "AWS", "Kubernetes"],
+    technologies: ["React.js", "Node.js", "PostgreSQL", "Docker", "AWS", "Kubernetes"],
     category: "Team Project"
   },
   {
@@ -153,6 +160,7 @@ const getProjectIcon = (category) => {
 
 export const ProjectsSection = () => {
   const theme = useTheme();
+  const prefersReducedMotion = useReducedMotion();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
   const [selectedProject, setSelectedProject] = useState(null);
@@ -242,7 +250,7 @@ export const ProjectsSection = () => {
   return (
     <Box
       component="section"
-      id="projects"
+      id={SECTION_IDS.PROJECTS}
       sx={{
         pt: { xs: 6, md: 6 },
         pb: { xs: 6, md: 8 },
@@ -313,8 +321,9 @@ export const ProjectsSection = () => {
             {projects.map((project, index) => (
               <Grid item xs={12} sm={6} key={index}>
                 <MotionCard
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  initial={prefersReducedMotion ? { opacity: 1, y: 0 } : "hidden"}
+                  whileInView={prefersReducedMotion ? undefined : "visible"}
+                  variants={prefersReducedMotion ? undefined : CARD_REVEAL_VARIANTS}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   viewport={{ once: true }}
                   onClick={() => handleOpenDialog(project)}
@@ -639,8 +648,9 @@ export const ProjectsSection = () => {
                 {projects.map((project, index) => (
                   <MotionCard
                     key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
+                    initial={prefersReducedMotion ? { opacity: 1, y: 0 } : "hidden"}
+                    whileInView={prefersReducedMotion ? undefined : "visible"}
+                    variants={prefersReducedMotion ? undefined : CARD_REVEAL_VARIANTS}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     viewport={{ once: true }}
                     onClick={() => handleOpenDialog(project)}

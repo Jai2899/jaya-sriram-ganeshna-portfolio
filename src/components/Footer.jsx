@@ -10,6 +10,7 @@ import XIcon from "@mui/icons-material/X";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import { keyframes } from "@mui/system";
 import React, { useState } from "react";
+import { QUICK_LINKS, SECTION_IDS } from "@/constants";
 
 const pulseAnimation = keyframes`
   0% { transform: scale(1); }
@@ -195,12 +196,7 @@ export const Footer = () => {
     }
   };
 
-  const quickLinks = [
-    { name: "About", href: "#about", icon: "01" },
-    { name: "Experience", href: "#experience", icon: "02" },
-    { name: "Projects", href: "#projects", icon: "03" },
-    { name: "Skills", href: "#skills", icon: "04" },
-  ];
+  const quickLinks = QUICK_LINKS;
 
   const socialLinks = [
     { 
@@ -333,6 +329,7 @@ export const Footer = () => {
                       e.preventDefault();
                       scrollToSection(link.href);
                     }}
+                    aria-label={`Navigate to ${link.name} section`}
                     sx={{
                       color: "text.secondary",
                       textDecoration: "none",
@@ -627,7 +624,7 @@ export const Footer = () => {
           <Grid item xs={12} sm={6} md={4}>
             <Box
               component="form"
-              id="contact"
+              id={SECTION_IDS.CONTACT}
               onSubmit={handleSubmit}
               sx={{
                 p: 3,
@@ -802,7 +799,7 @@ export const Footer = () => {
           </Typography>
 
           <IconButton
-            href="#jganeshna"
+            href={`#${SECTION_IDS.HOME}`}
             aria-label="Scroll to top"
             sx={{
               display: { xs: "none", lg: "flex" },

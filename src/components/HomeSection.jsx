@@ -20,6 +20,7 @@ import EmailIcon from "@mui/icons-material/Email";
 import WorkIcon from "@mui/icons-material/Work";
 import SchoolIcon from "@mui/icons-material/School";
 import { useState } from "react";
+import { SECTION_IDS } from '@/constants';
 
 const fadeIn = keyframes`
   0% {
@@ -227,7 +228,7 @@ export const HomeSection = () => {
 
   return (
     <Box
-      id="jganeshna"
+      id={SECTION_IDS.HOME}
       component="section"
       sx={{
         position: "relative",
@@ -391,7 +392,7 @@ export const HomeSection = () => {
                 },
               }}
             >
-              <MenuItem onClick={() => handleMenuItemClick('experience')}>
+              <MenuItem onClick={() => handleMenuItemClick(SECTION_IDS.EXPERIENCE)}>
                 <ListItemIcon>
                   <WorkIcon fontSize="small" />
                 </ListItemIcon>
@@ -400,7 +401,7 @@ export const HomeSection = () => {
                   secondary="View my work history"
                 />
               </MenuItem>
-              <MenuItem onClick={() => handleMenuItemClick('projects')}>
+              <MenuItem onClick={() => handleMenuItemClick(SECTION_IDS.PROJECTS)}>
                 <ListItemIcon>
                   <SchoolIcon fontSize="small" />
                 </ListItemIcon>
@@ -428,14 +429,17 @@ export const HomeSection = () => {
               {
                 icon: <GitHubIcon />,
                 href: "https://github.com/Jai2899",
+                ariaLabel: "View GitHub profile",
               },
               {
                 icon: <LinkedInIcon />,
                 href: "https://linkedin.com/in/jaya-sriram-g",
+                ariaLabel: "View LinkedIn profile",
               },
               {
                 icon: <EmailIcon />,
                 href: "mailto:gjayasriram@gmail.com",
+                ariaLabel: "Send email to Jaya Sriram",
               },
             ].map((social, index) => (
               <Button
@@ -443,6 +447,7 @@ export const HomeSection = () => {
                 href={social.href}
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label={social.ariaLabel}
                 sx={{
                   
                   width: 36,
@@ -481,7 +486,7 @@ export const HomeSection = () => {
           zIndex: 1,
         }}
         onClick={() => {
-          const element = document.getElementById("about");
+          const element = document.getElementById(SECTION_IDS.ABOUT);
           if (element) {
             const offset = window.innerWidth >= 960 ? 72 : 64;
             const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
